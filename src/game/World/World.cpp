@@ -69,6 +69,12 @@
 #include "Anticheat/Anticheat.hpp"
 #include "LFG/LFGMgr.h"
 
+#ifdef BUILD_ELUNA
+#include "LuaEngine/LuaEngine.h"
+#include "LuaEngine/ElunaConfig.h"
+#include "LuaEngine/ElunaLoader.h"
+#endif
+
 #ifdef BUILD_AHBOT
  #include "AuctionHouseBot/AuctionHouseBot.h"
 #endif
@@ -605,6 +611,7 @@ void World::LoadConfigSettings(bool reload)
     setConfig(CONFIG_BOOL_GM_LOWER_SECURITY, "GM.LowerSecurity", false);
     setConfig(CONFIG_UINT32_GM_INVISIBLE_AURA, "GM.InvisibleAura", 31748);
     setConfig(CONFIG_BOOL_GM_TICKETS_QUEUE_STATUS, "GM.TicketsQueueStatus", true);
+    setConfig(CONFIG_UINT32_GROUP_VISIBILITY, "Visibility.GroupMode", 0);
 
     setConfig(CONFIG_UINT32_FOGOFWAR_STEALTH, "Visibility.FogOfWar.Stealth", 0);
     setConfig(CONFIG_UINT32_FOGOFWAR_HEALTH, "Visibility.FogOfWar.Health", 0);
@@ -699,6 +706,7 @@ void World::LoadConfigSettings(bool reload)
     setConfigMinMax(CONFIG_FLOAT_GHOST_RUN_SPEED_WORLD,   "Death.Ghost.RunSpeed.World", 1.0f, 0.1f, 10.0f);
     setConfigMinMax(CONFIG_FLOAT_GHOST_RUN_SPEED_BG,      "Death.Ghost.RunSpeed.Battleground", 1.0f, 0.1f, 10.0f);
 
+    setConfig(CONFIG_FLOAT_THREAT_RADIUS, "ThreatRadius", 100.0f);
     setConfig(CONFIG_FLOAT_LEASH_RADIUS, "LeashRadius", 30.f);
     setConfigMin(CONFIG_UINT32_CREATURE_RESPAWN_AGGRO_DELAY, "CreatureRespawnAggroDelay", 5000, 0);
     setConfig(CONFIG_UINT32_CREATURE_PICKPOCKET_RESTOCK_DELAY, "CreaturePickpocketRestockDelay", 600);
@@ -836,6 +844,95 @@ void World::LoadConfigSettings(bool reload)
     setConfig(CONFIG_BOOL_PATH_FIND_OPTIMIZE, "PathFinder.OptimizePath", true);
     setConfig(CONFIG_BOOL_PATH_FIND_NORMALIZE_Z, "PathFinder.NormalizeZ", false);
 
+#ifdef BUILD_ELUNA
+    if (reload)
+    {
+        if (Eluna* e = GetEluna())
+            e->OnConfigLoad(reload);
+    }
+#endif
+
+#ifdef BUILD_SOLOCRAFT
+    // Start Solocraft Config
+    setConfig(CONFIG_BOOL_SOLOCRAFT_ENABLED, "Solocraft.Enable", true);
+    setConfig(CONFIG_BOOL_SOLOCRAFT_ANNOUNCE, "Solocraft.Announce", true);
+
+    //Balancing
+    setConfig(CONFIG_BOOL_SOLOCRAFT_DEBUFF_ENABLE, "SoloCraft.Debuff.Enable", 1);
+    setConfig(CONFIG_FLOAT_SOLOCRAFT_SPELLPOWER_MULT, "SoloCraft.Spellpower.Mult", 2.5);
+    setConfig(CONFIG_FLOAT_SOLOCRAFT_STATS_MULT, "SoloCraft.Stats.Mult", 100.0);
+    //Level Thresholds
+    setConfig(CONFIG_UINT32_SOLOCRAFT_MAX_LEVEL_DIFF, "Solocraft.Max.Level.Diff", 10);
+    //Dungeon Values
+    //Default
+    setConfig(CONFIG_UINT32_DUNGEON_LEVEL, "Solocraft.Dungeon.Level", 60);
+    //Classic Instances
+    setConfig(CONFIG_UINT32_ORGRIMMARINSTANCE_LEVEL, "Solocraft.OrgrimmarInstance.Level", 15);
+    setConfig(CONFIG_UINT32_SHADOWFANGKEEP_LEVEL, "Solocraft.ShadowfangKeep.Level", 15);
+    setConfig(CONFIG_UINT32_WAILINGCAVERNS_LEVEL, "Solocraft.WailingCaverns.Level", 17);
+    setConfig(CONFIG_UINT32_DEADMINES_LEVEL, "Solocraft.Deadmines.Level", 18);
+    setConfig(CONFIG_UINT32_BLACKFATHOM_LEVEL, "Solocraft.Blackfathom.Level", 20);
+    setConfig(CONFIG_UINT32_STOCKADES_LEVEL, "Solocraft.Stockades.Level", 22);
+    setConfig(CONFIG_UINT32_GNOMERAGONINSTANCE_LEVEL, "Solocraft.GnomeragonInstance.Level", 24);
+    setConfig(CONFIG_UINT32_RAZORFENKRAULINSTANCE_LEVEL, "Solocraft.RazorfenKraulInstance.Level", 30);
+    setConfig(CONFIG_UINT32_MONASTERYINSTANCES_LEVEL, "Solocraft.MonasteryInstances.Level", 35);
+    setConfig(CONFIG_UINT32_RAZORFENDOWNS_LEVEL, "Solocraft.RazorfenDowns.Level", 40);
+    setConfig(CONFIG_UINT32_ULDAMAN_LEVEL, "Solocraft.Uldaman.Level", 40);
+    setConfig(CONFIG_UINT32_TANARISINSTANCE_LEVEL, "Solocraft.TanarisInstance.Level", 44);
+    setConfig(CONFIG_UINT32_MAURADON_LEVEL, "Solocraft.Mauradon.Level", 48);
+    setConfig(CONFIG_UINT32_DIREMAUL_LEVEL, "Solocraft.DireMaul.Level", 48);
+    setConfig(CONFIG_UINT32_SUNKENTEMPLE_LEVEL, "Solocraft.SunkenTemple.Level", 50);
+    setConfig(CONFIG_UINT32_BLACKROCKDEPTHS_LEVEL, "Solocraft.BlackrockDepths.Level", 50);
+    setConfig(CONFIG_UINT32_BLACKROCKSPIRE_LEVEL, "Solocraft.BlackRockSpire.Level", 55);
+    setConfig(CONFIG_UINT32_SCHOOLOFNECROMANCY_LEVEL, "Solocraft.SchoolofNecromancy.Level", 55);
+    setConfig(CONFIG_UINT32_STRATHOLME_LEVEL, "Solocraft.Stratholme.Level", 55);
+    setConfig(CONFIG_UINT32_ONYXIALAIRINSTANCE_LEVEL, "Solocraft.OnyxiaLairInstance.Level", 60);
+    setConfig(CONFIG_UINT32_MOLTENCORE_LEVEL, "Solocraft.MoltenCore.Level", 60);
+    setConfig(CONFIG_UINT32_BLACKWINGLAIR_LEVEL, "Solocraft.BlackwingLair.Level", 40);
+    setConfig(CONFIG_UINT32_ZULGURUB_LEVEL, "Solocraft.Zul'gurub.Level", 60);
+    setConfig(CONFIG_UINT32_AHNQIRAJ_LEVEL, "Solocraft.AhnQiraj.Level", 60);
+    setConfig(CONFIG_UINT32_AHNQIRAJTEMPLE_LEVEL, "Solocraft.AhnQirajTemple.Level", 60);
+    setConfig(CONFIG_UINT32_STRATHOLMERAID_LEVEL, "Solocraft.StratholmeRaid.Level", 60);
+
+    //Dungeon Difficulty
+    //Catch alls
+    setConfig(CONFIG_FLOAT_DUNGEON_DIFF, "Solocraft.Dungeon", 5.0);
+    setConfig(CONFIG_FLOAT_RAID25_DIFF, "Solocraft.Raid25", 25.0);
+    setConfig(CONFIG_FLOAT_RAID40_DIFF, "Solocraft.Raid40", 40.0);
+    //Classic Instances
+    setConfig(CONFIG_FLOAT_ORGRIMMARINSTANCE_DIFF, "Solocraft.OrgrimmarInstance", 5.0);
+    setConfig(CONFIG_FLOAT_SHADOWFANGKEEP_DIFF, "Solocraft.ShadowfangKeep", 5.0);
+    setConfig(CONFIG_FLOAT_WAILINGCAVERNS_DIFF, "Solocraft.WailingCaverns", 5.0);
+    setConfig(CONFIG_FLOAT_DEADMINES_DIFF, "Solocraft.Deadmines", 5.0);
+    setConfig(CONFIG_FLOAT_BLACKFATHOM_DIFF, "Solocraft.Blackfathom", 5.0);
+    setConfig(CONFIG_FLOAT_STOCKADES_DIFF, "Solocraft.Stockades", 5.0);
+    setConfig(CONFIG_FLOAT_GNOMERAGONINSTANCE_DIFF, "Solocraft.GnomeragonInstance", 5.0);
+    setConfig(CONFIG_FLOAT_RAZORFENKRAULINSTANCE_DIFF, "Solocraft.RazorfenKraulInstance", 5.0);
+    setConfig(CONFIG_FLOAT_MONASTERYINSTANCES_DIFF, "Solocraft.MonasteryInstances", 5.0);
+    setConfig(CONFIG_FLOAT_RAZORFENDOWNS_DIFF, "Solocraft.RazorfenDowns", 5.0);
+    setConfig(CONFIG_FLOAT_ULDAMAN_DIFF, "Solocraft.Uldaman", 5.0);
+    setConfig(CONFIG_FLOAT_TANARISINSTANCE_DIFF, "Solocraft.TanarisInstance", 5.0);
+    setConfig(CONFIG_FLOAT_MAURADON_DIFF, "Solocraft.Mauradon", 5.0);
+    setConfig(CONFIG_FLOAT_DIREMAUL_DIFF, "Solocraft.DireMaul", 5.0);
+    setConfig(CONFIG_FLOAT_SUNKENTEMPLE_DIFF, "Solocraft.SunkenTemple", 5.0);
+    setConfig(CONFIG_FLOAT_BLACKROCKDEPTHS_DIFF, "Solocraft.BlackrockDepths", 5.0);
+    setConfig(CONFIG_FLOAT_BLACKROCKSPIRE_DIFF, "Solocraft.BlackRockSpire", 10.0);
+    setConfig(CONFIG_FLOAT_SCHOOLOFNECROMANCY_DIFF, "Solocraft.SchoolofNecromancy", 5.0);
+    setConfig(CONFIG_FLOAT_STRATHOLME_DIFF, "Solocraft.Stratholme", 5.0);
+    setConfig(CONFIG_FLOAT_ONYXIALAIRINSTANCE_DIFF, "Solocraft.OnyxiaLairInstance", 40.0);
+    setConfig(CONFIG_FLOAT_MOLTENCORE_DIFF, "Solocraft.MoltenCore", 40.0);
+    setConfig(CONFIG_FLOAT_BLACKWINGLAIR_DIFF, "Solocraft.BlackwingLair", 40.0);
+    setConfig(CONFIG_FLOAT_ZULGURUB_DIFF, "Solocraft.Zul'gurub", 20.0);
+    setConfig(CONFIG_FLOAT_AHNQIRAJ_DIFF, "Solocraft.AhnQiraj", 20.0);
+    setConfig(CONFIG_FLOAT_AHNQIRAJTEMPLE_DIFF, "Solocraft.AhnQirajTemple", 40.0);
+    setConfig(CONFIG_FLOAT_STRATHOLMERAID_DIFF, "Solocraft.StratholmeRaid", 40.0);
+    //End Solocraft Config
+#endif
+
+#ifdef BUILD_DUAL_SPEC
+    setConfig(CONFIG_UINT32_DUAL_SPEC_TIME_DELTA, "DualSpecTimeDelta", 300);
+#endif
+
     sLog.outString();
 }
 
@@ -945,6 +1042,18 @@ void World::SetInitialWorldSettings()
     ///- Init highest guids before any guid using table loading to prevent using not initialized guids in some code.
     sObjectMgr.SetHighestGuids();                           // must be after packing instances
     sLog.outString();
+
+#ifdef BUILD_ELUNA
+    sLog.outString("Loading Eluna config...");
+    sElunaConfig->Initialize();
+
+    if (sElunaConfig->IsElunaEnabled())
+    {
+        ///- Initialize Lua Engine
+        sLog.outString("Loading Lua scripts...");
+        sElunaLoader->LoadScripts();
+    }
+#endif
 
     sLog.outString("Loading Page Texts...");
     sObjectMgr.LoadPageTexts();
@@ -1194,7 +1303,6 @@ void World::SetInitialWorldSettings()
 
     sLog.outString("Loading Npc Text Id...");
     sObjectMgr.LoadNpcGossips();                            // must be after load Creature and LoadGossipText
-
     sLog.outString("Loading Scripts random templates...");  // must be before String calls
     sScriptMgr.LoadDbScriptRandomTemplates();
     ///- Load and initialize DBScripts Engine
@@ -1292,6 +1400,20 @@ void World::SetInitialWorldSettings()
 
     sLog.outString("Loading GM tickets...");
     sTicketMgr.LoadGMTickets();
+
+#ifdef BUILD_ELUNA
+    // lua state begins uninitialized
+    eluna = nullptr;
+
+    if (sElunaConfig->IsElunaEnabled())
+    {
+        ///- Run eluna scripts.
+        sLog.outString("Starting Eluna world state...");
+        // use map id -1 for the global Eluna state
+        eluna = std::make_unique<Eluna>(nullptr, sElunaConfig->IsElunaCompatibilityMode());
+        sLog.outString();
+    }
+#endif
 
     ///- Load and initialize EventAI Scripts
     sLog.outString("Loading CreatureEventAI Summons...");
@@ -1434,6 +1556,12 @@ void World::SetInitialWorldSettings()
 #endif
 #endif
 
+#ifdef BUILD_ELUNA
+    if (GetEluna())
+        GetEluna()->OnConfigLoad(false); // Must be done after Eluna is initialized and scripts have run
+    sLog.outString();
+#endif
+
     sLog.outString("---------------------------------------");
     sLog.outString("      CMANGOS: World initialized       ");
     sLog.outString("---------------------------------------");
@@ -1514,8 +1642,8 @@ void World::Update(uint32 diff)
 
     if (m_currentDiffSumIndex && m_currentDiffSumIndex % 60 == 0)
     {
-        sLog.outBasic("Avg Diff: %u. Sessions online: %u.", m_averageDiff, (uint32)GetActiveSessionCount());
-        sLog.outBasic("Max Diff: %u.", m_maxDiff);
+        sLog.outDebug("Avg Diff: %u. Sessions online: %u.", m_averageDiff, (uint32)GetActiveSessionCount());
+        sLog.outDebug("Max Diff: %u.", m_maxDiff);
     }
 
     if (m_currentDiffSum % 3000 == 0)
@@ -1614,6 +1742,15 @@ void World::Update(uint32 diff)
     sWorldState.Update(diff);
 #ifdef BUILD_METRICS
     auto postSingletonTime = std::chrono::time_point_cast<std::chrono::milliseconds>(Clock::now());
+#endif
+
+#ifdef BUILD_ELUNA
+    ///- used by eluna
+    if (Eluna* e = GetEluna())
+    {
+        e->UpdateEluna(diff);
+        e->OnWorldUpdate(diff);
+    }
 #endif
     ///- Update groups with offline leaders
     if (m_timers[WUPDATE_GROUPS].Passed())
@@ -2086,6 +2223,11 @@ void World::ShutdownServ(uint32 time, uint32 options, uint8 exitcode)
         m_ShutdownTimer = time;
         ShutdownMsg(true);
     }
+#ifdef BUILD_ELUNA
+    ///- Used by Eluna
+    if (Eluna* e = GetEluna())
+        e->OnShutdownInitiate(ShutdownExitCode(exitcode), ShutdownMask(options));
+#endif
 }
 
 /// Display a shutdown message to the user(s)
@@ -2128,6 +2270,12 @@ void World::ShutdownCancel()
     SendServerMessage(msgid);
 
     DEBUG_LOG("Server %s cancelled.", (m_ShutdownMask & SHUTDOWN_MASK_RESTART ? "restart" : "shutdown"));
+
+#ifdef BUILD_ELUNA
+    ///- Used by Eluna
+    if (Eluna* e = GetEluna())
+        e->OnShutdownCancel();
+#endif
 }
 
 void World::UpdateSessions(uint32 diff)

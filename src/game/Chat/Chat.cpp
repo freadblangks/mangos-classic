@@ -34,6 +34,9 @@
 #include "Spells/SpellMgr.h"
 #include "Pools/PoolManager.h"
 #include "GameEvents/GameEventMgr.h"
+#ifdef BUILD_ELUNA
+#include "LuaEngine/LuaEngine.h"
+#endif
 
 #ifdef ENABLE_PLAYERBOTS
 #include "ahbot/AhBot.h"
@@ -949,6 +952,9 @@ ChatCommand* ChatHandler::getCommandTable()
         { "aura",           SEC_ADMINISTRATOR,  false, &ChatHandler::HandleAuraCommand,                "", nullptr },
         { "unaura",         SEC_ADMINISTRATOR,  false, &ChatHandler::HandleUnAuraCommand,              "", nullptr },
         { "announce",       SEC_MODERATOR,      true,  &ChatHandler::HandleAnnounceCommand,            "", nullptr },
+#ifdef BUILD_DUAL_SPEC
+        { "swapspec",       SEC_PLAYER,         false, &ChatHandler::HandleSwapSpec,                   "", nullptr },
+#endif
         { "notify",         SEC_MODERATOR,      true,  &ChatHandler::HandleNotifyCommand,              "", nullptr },
         { "goname",         SEC_MODERATOR,      false, &ChatHandler::HandleGonameCommand,              "", nullptr },
         { "appear",         SEC_MODERATOR,      false, &ChatHandler::HandleGonameCommand,              "", nullptr },
@@ -1445,6 +1451,11 @@ void ChatHandler::ExecuteCommand(const char* text)
         }
         case CHAT_COMMAND_UNKNOWN_SUBCOMMAND:
         {
+#ifdef BUILD_ELUNA
+            if(Eluna* e = sWorld.GetEluna())
+                if (!e->OnCommand(m_session ? m_session->GetPlayer() : NULL, fullcmd.c_str()))
+                    return;
+#endif
             SendSysMessage(LANG_NO_SUBCMD);
             ShowHelpForCommand(command->ChildCommands, text);
             SetSentErrorMessage(true);
@@ -1452,6 +1463,11 @@ void ChatHandler::ExecuteCommand(const char* text)
         }
         case CHAT_COMMAND_UNKNOWN:
         {
+#ifdef BUILD_ELUNA
+            if (Eluna* e = sWorld.GetEluna())
+                if (!e->OnCommand(m_session ? m_session->GetPlayer() : NULL, fullcmd.c_str()))
+                    return;
+#endif
             SendSysMessage(LANG_NO_CMD);
             SetSentErrorMessage(true);
             break;
@@ -3474,8 +3490,11 @@ bool CliHandler::isAvailable(ChatCommand const& cmd) const
 
 void CliHandler::SendSysMessage(const char* str)
 {
-    m_print(str);
-    m_print("\r\n");
+    if (m_print)
+    {
+        m_print(str);
+        m_print("\r\n");
+    }
 }
 
 std::string CliHandler::GetNameLink() const

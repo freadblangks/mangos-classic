@@ -930,6 +930,11 @@ TalentsInspecting = 1
 ###################################################################################################################
 # CREATURE AND GAMEOBJECT SETTINGS
 #
+#    ThreatRadius
+#        Radius for creature to evade after being pulled away from combat start point
+#        If ThreatRadius is less than creature aggro radius then aggro radius will be used
+#        Default: 100 yards
+#
 #    Rate.Creature.Aggro
 #        Aggro radius percent or off.
 #        Default: 1   - 100%
@@ -1050,6 +1055,7 @@ TalentsInspecting = 1
 #
 ###################################################################################################################
 
+ThreatRadius = 100
 Rate.Creature.Aggro = 1
 CreatureRespawnAggroDelay = 5000
 LeashRadius = 30
@@ -1280,6 +1286,12 @@ GM.TicketsQueueStatus    = 1
 ###################################################################################################################
 # VISIBILITY AND RADIUSES
 #
+#    Visibility.GroupMode
+#        Group visibility modes
+#        Default: 0 (standard setting: only members from same group can 100% auto detect invisible player)
+#                 1 (raid members 100% auto detect invisible player from same raid)
+#                 2 (players from same team can 100% auto detect invisible player)
+#
 #    Visibility.FogOfWar.Stealth
 #        Sets visibility mode for invisible units. Fog Of War settings are not applied to GMs.
 #        Default: 0 (standard setting: players can see invisibile units in their own group)
@@ -1316,6 +1328,7 @@ GM.TicketsQueueStatus    = 1
 #
 ###################################################################################################################
 
+Visibility.GroupMode        = 0
 Visibility.FogOfWar.Stealth = 0
 Visibility.FogOfWar.Health  = 0
 Visibility.FogOfWar.Stats   = 0
@@ -1481,6 +1494,9 @@ Visibility.AIRelocationNotifyDelay = 1000
 #         Modifies the speed of player's ghosts, removed upon reviving, not permanent/saved, in non-BG and BG maps
 #         Default: 1.0 (normal speed)
 #
+#    DualSpecTimeDelta 
+#    Time duration to switch talen specs, dual spec command .swapspec
+#
 ###################################################################################################################
 
 Rate.Health = 1
@@ -1545,6 +1561,7 @@ Death.Bones.World = 1
 Death.Bones.Battleground = 1
 Death.Ghost.RunSpeed.World = 1.0
 Death.Ghost.RunSpeed.Battleground = 1.0
+DualSpecTimeDelta = 300
 
 ###################################################################################################################
 # BATTLEGROUND CONFIG
@@ -1786,3 +1803,372 @@ Metric.Password = ""
 
 Dummy.Debug1 = 0
 Dummy.Debug2 = 0
+
+###################################################################################################################
+#  ELUNA SETTINGS
+#
+#    Eluna.Enabled
+#        Enable Eluna LuaEngine
+#        Default: 1 (Enabled)
+#                 0 (Disabled)
+#
+#   Eluna.CompatibilityMode
+#       Description: Toggles Eluna between compatibility mode (single-threaded) or multistate mode. 
+#                    Compatibility mode limits the core to a single map update thread.
+#       Default:     true  - (enabled)
+#                    false - (disabled)
+#
+#   Eluna.OnlyOnMaps
+#       Description: When Eluna is enabled, a state will only be created for a list of specified maps
+#                    This only works for multistate mode.
+#       Default:     ""  - (enabled on all maps)
+#                    "0,1,2,..." - (enabled on specific maps only)
+#
+#   Eluna.TraceBack
+#       Description: Sets whether to use debug.traceback function on a lua error or not.
+#                    Notice that you can redefine the function.
+#       Default:    false - (use default error output)
+#                   true  - (use debug.traceback function)
+#
+#   Eluna.ScriptPath
+#       Description: Sets the location of the script folder to load scripts from
+#                    The path can be relative or absolute.
+#       Default:    "lua_scripts"
+#
+###################################################################################################################
+
+Eluna.Enabled = 1
+Eluna.CompatibilityMode = false
+Eluna.OnlyOnMaps = ""
+Eluna.TraceBack = false
+Eluna.ScriptPath = "lua_scripts"
+
+###################################################################################################################
+#  SOLOCRAFT SETTINGS
+#
+#   Solocraft.Enable
+#       Enable Solocraft module
+#       Default: 1 (Enabled)
+#                0 (Disabled)
+#   
+#   Solocraft.Announce
+#       Announce the module when the player logs in?
+#       Default: 1 (Enabled)
+#                0 (Disabled)
+#
+#   Solocraft.Debuff.Enable
+#       Enable Debuff of new party members who enter the dungeon to avoid overloading the dungeon?
+#       Overloading is when a group member already in the dungeon has the full offset/buff of the
+#       dungeon applied then they invite new group members who enter the dungeon and also receive an
+#       offset which creates a huge imbalance.
+#       The debuff will make the new members weak until all members leave the instance/dungeon
+#       instance/dungeon and re-enter which will then split the offset among all the group members.
+#       Default: 1 (Enabled)
+#                0 (Disabled)
+#
+#   SoloCraft.Spellpower.Mult
+#       Spellpower Bonus Multiplier
+#       Spellcasters spellpower bonus multiplier to offset no spellpower received from stats
+#       Formula: (player->level * multiplier) * difficulty
+#       Example Level 24 Mage with default modifier and  a dungeon difficulty of 5 will receive a base
+#       Spellpower increase of 300.
+#       Default: 2.5
+#                0.0 (Disabled)
+#
+#   SoloCraft.Stats.Mult
+#       Stats Percentage Bonus Multiplier
+#       Forumla: player->Stats * (difficulty * multiplier)
+#       Default: 100.0
+#                  0.0 (Disable)
+#
+#   Solocraft.Max.Level.Diff
+#       Max player level difference over the Dungeon's Level for Solocraft to apply the difficulty offset buff.
+#       Default: 10
+#       Disable: 60
+#
+#   Solocraft.Dungeon
+#       Difficulty offset for unhandled/undefined dungeons
+#       Default: 5.0
+#
+#   Solocraft.Raid25
+#       Difficulty offset for unhandled/undefined 25-man raids
+#       Default: 25.0
+#
+#   Solocraft.Raid40
+#       Difficulty offset for unhandled/undefined 40-man raids
+#       Default: 40.0
+#
+#   Solocraft.Dungeon.Level
+#       Base level for unhandled/undefined dungeons/raids
+#       Default: 60
+#
+#   Solocraft.OrgrimmarInstance
+#       Difficulty offset for Ragefire Chasm
+#       Default: 5.0
+#
+#   Solocraft.ShadowfangKeep
+#       Difficulty offset for Shadowfang Keep
+#       Default: 5.0
+#
+#   Solocraft.WailingCaverns
+#       Difficulty offset for Wailing Caverns
+#       Default: 5.0
+#
+#   Solocraft.Deadmines
+#       Difficulty offset for Deadmines
+#       Default: 5.0
+#
+#   Solocraft.Blackfathom
+#       Difficulty offset for Blackfathom Deeps
+#       Default: 5.0
+#
+#   Solocraft.Stockades
+#       Difficulty offset for Stormwind Stockades
+#       Default: 5.0
+#
+#   Solocraft.GnomeragonInstance
+#       Difficulty offset for Gnomeragon
+#       Default: 5.0
+#
+#   Solocraft.RazorfenKraulInstance
+#       Difficulty offset for Razorfen Kraul
+#       Default: 5.0
+#
+#   Solocraft.MonasteryInstances
+#       Difficulty offset for Scarlet Monastery Dungeons
+#       Default: 5.0
+#
+#   Solocraft.RazorfenDowns
+#       Difficulty offset for Razonfen Downs
+#       Default: 5.0
+#
+#   Solocraft.Uldaman
+#       Difficulty offset for Uldaman
+#       Default: 5.0
+#
+#   Solocraft.TanarisInstance
+#       Difficulty offset for Zul'Farrak
+#       Default: 5.0
+#
+#   Solocraft.Mauradon
+#       Difficulty offset for Maruadon
+#       Default: 5.0
+#
+#   Solocraft.DireMaul
+#       Difficulty offset for Dire Maul
+#       Default: 5.0
+#
+#   Solocraft.SunkenTemple
+#       Difficulty offset for The Temple of Atal'Hakkar aka Sunken Temple
+#       Default: 5.0
+#
+#   Solocraft.BlackrockDepths
+#       Difficulty offset for Blackrock Depths
+#       Default: 5.0
+#
+#   Solocraft.BlackRockSpire
+#       Difficulty offset for Blackrock Spire, both lower and upper
+#       Default: 10.0
+#
+#   Solocraft.SchoolofNecromancy
+#       Difficulty offset for Scholomance
+#       Default: 5.0
+#
+#   Solocraft.Stratholme
+#       Difficulty offset for Stratholme
+#       Default: 5.0
+#
+#   Solocraft.OnyxiaLairInstance
+#       Difficulty offset for Onyxia's Lair
+#       Default: 40.0
+#
+#   Solocraft.MoltenCore
+#       Difficulty offset for Molten Core
+#       Default: 40.0
+#
+#   Solocraft.BlackwingLair
+#       Difficulty offset for Blackwing Lair
+#       Default: 40.0
+#
+#   Solocraft.Zul'gurub
+#       Difficulty offset for Zul'gurub
+#       Default: 20.0
+#
+#   Solocraft.AhnQiraj
+#       Difficulty offset for the Ruins of Ahn'Qiraj
+#       Default: 20.0
+#
+#   Solocraft.AhnQirajTemple
+#       Difficulty offset for the Temple of Ahn'Qiraj
+#       Default: 40.0
+#
+#   Solocraft.StratholmeRaid
+#       Difficulty offset for Naxxramas
+#       Default: 40.0
+#
+#   Solocraft.OrgrimmarInstance.Level
+#       Base level for Ragefire Chasm
+#       Default: 15
+#
+#   Solocraft.ShadowfangKeep.Level
+#       Base level for Shadowfang Keep
+#       Default: 15
+#
+#   Solocraft.WailingCaverns.Level
+#       Base level for Wailing Caverns
+#       Default: 17
+#
+#   Solocraft.Deadmines.Level
+#       Base level for Deadmines
+#       Default: 18
+#
+#   Solocraft.Blackfathom.Level
+#       Base level for Blackfathom Deeps
+#       Default: 20
+#
+#   Solocraft.Stockades.Level
+#       Base level for Stormwind Stockades
+#       Default: 22
+#
+#   Solocraft.GnomeragonInstance.Level
+#       Base level for Gnomeragon
+#       Default: 24
+#
+#   Solocraft.RazorfenKraulInstance.Level
+#       Base level for Razonfen Kraul
+#       Default: 30
+#
+#   Solocraft.MonasteryInstances.Level
+#       Base level for Scarlet Monastery dungeons
+#       Default: 35
+#
+#   Solocraft.RazorfenDowns.Level
+#       Base level for Razorfen Downs
+#       Default: 40
+#
+#   Solocraft.Uldaman.Level
+#       Base level for Uldaman
+#       Default: 40
+#
+#   Solocraft.TanarisInstance.Level
+#       Base level for Zul'Farrak
+#       Default: 44
+#
+#   Solocraft.Mauradon.Level
+#       Base level for Mauradon
+#       Default: 48
+#
+#   Solocraft.DireMaul.Level
+#       Base level for Dire Maul
+#       Default: 48
+#
+#   Solocraft.SunkenTemple.Level
+#       Base level for The Temple of Atal'Hakkar aka Sunken Temple
+#       Default: 50
+#
+#   Solocraft.BlackrockDepths.Level
+#       Base level for Blackrock Depths
+#       Default: 50
+#
+#   Solocraft.BlackRockSpire.Level
+#       Base level for Blackrock Spire, both lower and upper
+#       Default: 55
+#
+#   Solocraft.SchoolofNecromancy.Level
+#       Base level for Scholomance
+#       Default: 55
+#
+#   Solocraft.Stratholme.Level
+#       Base level for Stratholme
+#       Default: 55
+#
+#   Solocraft.OnyxiaLairInstance.Level
+#       Base level for Onyxia's Lair
+#       Default: 60
+#
+#   Solocraft.MoltenCore.Level
+#       Base level for Molten Core
+#       Default: 60
+#
+#   Solocraft.BlackwingLair.Level
+#       Base level for Blackwing Lair
+#       Default: 60
+#
+#   Solocraft.Zul'gurub.Level
+#       Base level for Zul'gurub
+#       Default: 60
+#
+#   Solocraft.AhnQiraj.Level
+#       Base level for the Ruins of Ahn'Qiraj
+#       Default: 60
+#
+#   Solocraft.AhnQirajTemple.Level
+#       Base level for the Temple of Ahn'Qiraj
+#       Default: 60
+#
+#   Solocraft.StratholmeRaid.Level
+#       Base level for Naxxramas
+#       Default: 60
+###################################################################################################################
+Solocraft.Enable = 1
+Solocraft.Announce = 1
+SoloCraft.Debuff.Enable = 1
+SoloCraft.Spellpower.Mult = 2.5
+SoloCraft.Stats.Mult = 100.0
+Solocraft.Max.Level.Diff = 10
+Solocraft.Dungeon = 5.0
+Solocraft.Raid25 = 25.0
+Solocraft.Raid40 = 40.0
+Solocraft.Dungeon.Level = 60
+Solocraft.OrgrimmarInstance = 5.0
+Solocraft.ShadowfangKeep = 5.0
+Solocraft.WailingCaverns = 5.0
+Solocraft.Deadmines = 5.0
+Solocraft.Blackfathom = 5.0
+Solocraft.Stockades = 5.0
+Solocraft.GnomeragonInstance = 5.0
+Solocraft.RazorfenKraulInstance = 5.0
+Solocraft.MonasteryInstances = 5.0
+Solocraft.RazorfenDowns = 5.0
+Solocraft.Uldaman = 5.0
+Solocraft.TanarisInstance = 5.0
+Solocraft.Mauradon = 5.0
+Solocraft.DireMaul = 5.0
+Solocraft.SunkenTemple = 5.0
+Solocraft.BlackrockDepths = 5.0
+Solocraft.BlackRockSpire = 10.0
+Solocraft.SchoolofNecromancy = 5.0
+Solocraft.Stratholme = 5.0
+Solocraft.OnyxiaLairInstance = 40.0
+Solocraft.MoltenCore = 40.0
+Solocraft.BlackwingLair = 40.0
+Solocraft.Zul'gurub = 20.0
+Solocraft.AhnQiraj = 20.0
+Solocraft.AhnQirajTemple = 40.0
+Solocraft.StratholmeRaid = 40.0
+Solocraft.OrgrimmarInstance.Level = 15
+Solocraft.ShadowfangKeep.Level = 15
+Solocraft.WailingCaverns.Level = 17
+Solocraft.Deadmines.Level = 18
+Solocraft.Blackfathom.Level = 20
+Solocraft.Stockades.Level = 22
+Solocraft.GnomeragonInstance.Level = 24
+Solocraft.RazorfenKraulInstance.Level = 30
+Solocraft.MonasteryInstances.Level = 35
+Solocraft.RazorfenDowns.Level = 40
+Solocraft.Uldaman.Level = 40
+Solocraft.TanarisInstance.Level = 44
+Solocraft.Mauradon.Level = 48
+Solocraft.DireMaul.Level = 48
+Solocraft.SunkenTemple.Level = 50
+Solocraft.BlackrockDepths.Level = 50
+Solocraft.BlackRockSpire.Level = 55
+Solocraft.SchoolofNecromancy.Level = 55
+Solocraft.Stratholme.Level = 55
+Solocraft.OnyxiaLairInstance.Level = 60
+Solocraft.MoltenCore.Level = 60
+Solocraft.BlackwingLair.Level = 60
+Solocraft.Zul'gurub.Level = 60
+Solocraft.AhnQiraj.Level = 60
+Solocraft.AhnQirajTemple.Level = 60
+Solocraft.StratholmeRaid.Level = 60
